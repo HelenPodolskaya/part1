@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class BubbleSorter implements ISorter {
 
+    // приватные функции лучше всего располагать под публичными, из которых они вызываются
     /**
      * @param personList массив объектов Person
      * @param first  и  @param second - элементы массива, которые меняем местами
@@ -32,6 +33,7 @@ public class BubbleSorter implements ISorter {
                             || (personList.get(in).getSex() == personList.get(in + 1).getSex()
                             && personList.get(in).getAge() <= personList.get(in + 1).getAge() && (res > 0)))
                         toSwap(personList, in, in + 1);
+                    // а вот если нам нужно провалидировать входные данные, то лучше это сделать сразу
                     if(res==0 && personList.get(in).getAge() == personList.get(in + 1).getAge())
                         throw new RuntimeException("Имена людей и возраст совпадают "+personList.get(in).getName()+" "+personList.get(in).getAge());
                 }

@@ -6,6 +6,8 @@ import java.util.*;
  MyClass - вспомогательный класс, для моделирования ошибок NullPointerException
  ArrayIndexOutOfBoundsException
  */
+// давайте форматировать согласно джавовым конвенциям. В идее есть шорткат, который умеет это делать сам Ctrl+Alt+L
+// зачем нужно было вводить дополнительный класс?
 public class MyClass {
     ArrayList<String> myClassElem;
     public MyClass(ArrayList<String> strElem)

@@ -17,6 +17,7 @@ public class Main {
             Scanner in = new Scanner(System.in);
             int errorNumber = in.nextInt();
             switch (errorNumber) {
+                //очень странно выделен блок {} к тому же не нужен
                 case 1: {
                     MyClass mc = new MyClass();
                     System.out.println(mc.GetCount());
@@ -30,6 +31,7 @@ public class Main {
                 case 3:
                     throw new RuntimeException("Runtime exception!");
                 default:
+                    //если уж вводить обработку входных команд, то нужно выводить сообщение о неподдерживаемой команде
                     System.out.println("Hello world!");
             }
         } catch (InputMismatchException ex) {

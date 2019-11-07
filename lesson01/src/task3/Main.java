@@ -37,16 +37,21 @@ public class Main {
                 int methodSort = in.nextInt();
                 if (methodSort != 1 && methodSort != 2)
                     throw new RuntimeException("Неверное число!\n");
+                // несовсем точное место для этого, ведь тут ещё примешивается логика выбора класса для сортировки. Пусть и совсем небольшая, но погрешность
                 long startTime = System.currentTimeMillis();
                 ISorter sorter;
+                // на подумать: что если вас попросят добавить ещё один способ сортировки?
+                // Можно ли реализовать программу так, чтобы не нужно было добавлять ещё одно условие if или switch-case?
                 if (methodSort == 1)
                     sorter = new BubbleSorter();
                 else
                     sorter = new CocktailSort();
                 sorter.Sort(personList);
                 PrintPerson(personList);
+                // опять же тут немного вемени уходит ещё и на то, чтобы напечатать
                 long stopTime = System.currentTimeMillis();
                 long elapsedTime = stopTime - startTime;
+                // лучше всё таки в миллисикундах
                 System.out.println("Время работы алгоритма: " + TimeUnit.MILLISECONDS.toSeconds(elapsedTime) + " секунд.\n");
                 System.out.println("\nЗавершить программу? y/n");
                 String str_exit = in.next();
@@ -93,6 +98,7 @@ public class Main {
      */
     private static ArrayList<Person> GeneratePersonList(ArrayList<String> manNames,ArrayList<String> womanNames,int n)
     {
+        // имена переменных с маленькой буквы
         ArrayList<Person> PersonList = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             short age = (short) (Math.random() * (100 + 1));
@@ -112,6 +118,7 @@ public class Main {
         return PersonList;
     }
 
+    // javadoc-и это хорошо, но лишь для публичных функций
     /**
      * метод для генерации массива мужских имён
      * @return массив мужских имён

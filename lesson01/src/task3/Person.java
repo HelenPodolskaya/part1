@@ -6,7 +6,10 @@ package task3;
  *  sex (пол – объект класса Sex со строковыми константами внутри MAN, WOMAN), name (имя - строка).
  */
 public class Person {
+    // имена полей с маленькой буквы
     private short Age;
+    // имена классов в camel case с большой буквы
+    // плохое место для его объявления, лучше внизу класса или вообще отдельно
     protected enum Sex_Enum{MAN, WOMAN}
     private Sex_Enum Sex;
     private String Name;
@@ -30,6 +33,7 @@ public class Person {
         return Name;
     }
 
+    // сеттеры в нашем случае не нужны, это мёртвый код
     /**устанавливает
      * @param name имя объекта Person
      */
