@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+        // переменные нужно вводить как можно ближе к их непосредственному использованию. arrayCount и numbersArray можно объявить прямо в цикле
+        // комментарии это хорошо, но только если они объясняют неочевидные вещи
         int arrayCount = 0; //количесвто чисел в массиве(вводится с консоли)
         int exit = 0;// переменная для выхода из программы 0 - не завершать программу, 1 - завершить программу
         ArrayList<Integer> numbersArray;// массив чисел q, для которых квадрат целой части q равен k
@@ -23,9 +25,13 @@ public class Main {
                 arrayCount = in.nextInt();
                 numbersArray = new ArrayList<>();
                 for (int i = 0; i < arrayCount; i++) {
+                    // зачем так сложно?
                     int k = (int) (Math.random() * (arrayCount + arrayCount + 1)) - arrayCount; // генерация числа k
                     try {
+                        // в общем случае лучше сначало писать успешный сценарий
                         if (k < 0) {
+                            // в результате получается, что мы гннерим не n чисел, а больше, причём существует вероятность, что программа не завершится
+                            // нужно просто генерировать исключение, если попалось отрицательное число
                             i--;
                             throw new RuntimeException("Число отрицательное! " + k);
                         } else {
@@ -40,6 +46,7 @@ public class Main {
                 }
                 printNumbersArray(numbersArray, arrayCount);
                 System.out.println("\nЗавершить программу? y/n");
+                //именовать пересенные тоже давайте в по стандарту с помощбю camel case
                 String str_exit = in.next();
                 if (str_exit.equals("y")) {
                     exit = 1;
@@ -47,14 +54,17 @@ public class Main {
                 }
             } catch (InputMismatchException ex) {
                 System.out.println("Значение должно быть целым числом!");
-            } catch (RuntimeException ex) {
+            }
+            // зачем нам эта обработка?
+            catch (RuntimeException ex) {
                 System.out.println(ex.getMessage());
             } finally {
-
+                // пустой блок
             }
         }
     }
 
+    // Эта функция может быть приватной
     /**
      Функция печати элементов массива
      * @param numbersArray

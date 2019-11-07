@@ -23,6 +23,7 @@ public class CocktailSort implements ISorter {
         int right = personList.size() - 1;
         try {
             do {
+                // куски кода блоках циклов очень похожи, чтобы соблюсти принцип DRY можно вынести их в функцию
                 for (int i = left; i < right; i++) {
                     int res = personList.get(i).getName().compareTo(personList.get(i + 1).getName());
                     if ((personList.get(i).getSex() == Person.Sex_Enum.WOMAN && personList.get(i + 1).getSex() == Person.Sex_Enum.MAN)
@@ -49,6 +50,7 @@ public class CocktailSort implements ISorter {
                 left++;
             } while (left < right);
         }
+        // подходящее ли это место? И точно ли RuntimeException всегда будет значить, что это про совпадение имён и возрастовлюдей?
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
         }
