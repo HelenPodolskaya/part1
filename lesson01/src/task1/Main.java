@@ -1,12 +1,13 @@
 package task1;
+
 import java.util.*;
 
 /**
- @author PodolskayaEV
- Задание 1. Написать программу ”Hello, World!”. В ходе выполнения программы она должна выбросить исключение и завершиться с ошибкой.
- - Смоделировав ошибку NullPointerException
- - Смоделировав ошибку ArrayIndexOutOfBoundsException
- - Вызвав свой вариант ошибки через оператор throw
+ * @author PodolskayaEV
+ * Задание 1. Написать программу ”Hello, World!”. В ходе выполнения программы она должна выбросить исключение и завершиться с ошибкой.
+ * - Смоделировав ошибку NullPointerException
+ * - Смоделировав ошибку ArrayIndexOutOfBoundsException
+ * - Вызвав свой вариант ошибки через оператор throw
  */
 public class Main {
 
@@ -30,7 +31,7 @@ public class Main {
                 case 3:
                     throw new RuntimeException("Runtime exception!");
                 default:
-                    System.out.println("Hello world!");
+                    System.out.println("Неверное значение!");
             }
         } catch (InputMismatchException ex) {
             System.out.println("Значение должно быть целым числом!");

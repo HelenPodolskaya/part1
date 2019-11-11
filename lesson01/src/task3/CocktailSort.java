@@ -25,7 +25,7 @@ public class CocktailSort implements ISorter {
             do {
                 for (int i = left; i < right; i++) {
                     int res = personList.get(i).getName().compareTo(personList.get(i + 1).getName());
-                    if ((personList.get(i).getSex() == Person.Sex_Enum.WOMAN && personList.get(i + 1).getSex() == Person.Sex_Enum.MAN)
+                    if ((personList.get(i).getSex() == Sex_Enum.WOMAN && personList.get(i + 1).getSex() ==Sex_Enum.MAN)
                             || (personList.get(i).getSex() == personList.get(i + 1).getSex()
                             && personList.get(i).getAge() < personList.get(i + 1).getAge())
                             || (personList.get(i).getSex() == personList.get(i + 1).getSex()
@@ -37,7 +37,7 @@ public class CocktailSort implements ISorter {
                 right--;
                 for (int i = right; i > left; i--) {
                     int res = personList.get(i).getName().compareTo(personList.get(i - 1).getName());
-                    if ((personList.get(i).getSex() == Person.Sex_Enum.MAN && personList.get(i - 1).getSex() == Person.Sex_Enum.WOMAN)
+                    if ((personList.get(i).getSex() == Sex_Enum.MAN && personList.get(i - 1).getSex() == Sex_Enum.WOMAN)
                             || (personList.get(i).getSex() == personList.get(i - 1).getSex()
                             && personList.get(i).getAge() > personList.get(i - 1).getAge())
                             || (personList.get(i).getSex() == personList.get(i - 1).getSex()
