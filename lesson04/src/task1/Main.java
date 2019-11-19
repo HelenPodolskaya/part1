@@ -19,7 +19,7 @@ public class Main {
     private static AtomicInteger ai = new AtomicInteger();
 
     public static void main(String[] args) {
-/*
+
         while (readIsExit() != 1) {
             System.out.println("Выберите действие:\n1- Добавить животное в кавртатеку;\n2-Изменить имя животного\n3-Изменить вес животного\n4-Найти животное\n5-Вывести всех животного, отсортированных по имени\n");
             try {
@@ -37,7 +37,7 @@ public class Main {
                 System.out.println("Значение должно быть целым числом!");
                 in.next();
             }
-        }*/
+        }
 
         Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Sex_Enum.MAN, "Вася"), 10.0);
         Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
@@ -99,7 +99,7 @@ public class Main {
             Double petWeight = in.nextDouble();
             petsLibrary.addPet(new Pet(ai.incrementAndGet(), petName, (new Person(getInOwnerAge(), getInOwnerSex(), ownerName)), petWeight));
         } catch (PetLibException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage()); in.next();
         }
 
     }
