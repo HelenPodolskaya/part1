@@ -1,5 +1,5 @@
 package task3;
-
+import task3.Sex_Enum;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
