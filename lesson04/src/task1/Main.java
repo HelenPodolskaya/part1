@@ -1,6 +1,7 @@
 package task1;
 
 import task3.Person;
+import task3.Sex_Enum;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -38,11 +39,11 @@ public class Main {
             }
         }*/
 
-        Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Person.Sex_Enum.MAN, "Вася"), 10.0);
-        Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Person.Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet2 = new Pet(ai.incrementAndGet(), "Зайчик", new Person((short) 9, Person.Sex_Enum.MAN, "Саша"), 5.0);
-        Pet pet3 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Person.Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet4 = new Pet(ai.incrementAndGet(), "Кеша", new Person((short) 11, Person.Sex_Enum.WOMAN, "Маша"), 0.15);
+        Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Sex_Enum.MAN, "Вася"), 10.0);
+        Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
+        Pet pet2 = new Pet(ai.incrementAndGet(), "Зайчик", new Person((short) 9, Sex_Enum.MAN, "Саша"), 5.0);
+        Pet pet3 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
+        Pet pet4 = new Pet(ai.incrementAndGet(), "Кеша", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 0.15);
         PetLib pl = new PetLib();
         pl.addPet(pet);
         pl.addPet(pet1);
@@ -50,7 +51,7 @@ public class Main {
         pl.addPet(pet3);
         pl.addPet(pet4);
         pl.setPetName(2, "Мурка");
-        List<Pet> pets = pl.findPetByOwner(new Person((short) 11, Person.Sex_Enum.WOMAN, "Маша"));
+        List<Pet> pets = pl.findPetByOwner(new Person((short) 11, Sex_Enum.WOMAN, "Маша"));
         for (Pet p : pets)
             System.out.println(p.getPetID() + " " + p.getPetName());
         pets = pl.findPet("Мурка");
@@ -67,12 +68,12 @@ public class Main {
         addPet();
     }
 
-    private static Person.Sex_Enum getInOwnerSex() throws PetLibException {
+    private static Sex_Enum getInOwnerSex() throws PetLibException {
         System.out.println("Введите пол:");
         String sex = in.next();
-        Person.Sex_Enum ownerSex;
-        if (sex == "w") ownerSex = Person.Sex_Enum.WOMAN;
-        else if (sex == "m") ownerSex = Person.Sex_Enum.MAN;
+        Sex_Enum ownerSex;
+        if (sex == "w") ownerSex = Sex_Enum.WOMAN;
+        else if (sex == "m") ownerSex = Sex_Enum.MAN;
         else throw new PetLibException("Пол владельца введен неверно!");
         return ownerSex;
     }

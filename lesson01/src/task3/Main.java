@@ -102,15 +102,15 @@ public class Main {
         ArrayList<Person> PersonList = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             short age = (short) (Math.random() * (100 + 1));
-            Person.Sex_Enum sex;
+            Sex_Enum sex;
             String name;
             int k = (int) (Math.random() * (9 + 1));
             int j = (int) (Math.random() * 2);
             if (j == 0) {
-                sex = Person.Sex_Enum.MAN;
+                sex = Sex_Enum.MAN;
                 name = manNames.get(k);
             } else {
-                sex = Person.Sex_Enum.WOMAN;
+                sex = Sex_Enum.WOMAN;
                 name = womanNames.get(k);
             }
             PersonList.add(new Person(age, sex, name));
