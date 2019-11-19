@@ -27,7 +27,7 @@ public class BubbleSorter implements ISorter {
             for (int out = personList.size() - 1; out >= 1; out--) {
                 for (int in = 0; in < out; in++) {
                     int res = personList.get(in).getName().compareTo(personList.get(in + 1).getName());
-                    if ((personList.get(in).getSex() == Person.Sex_Enum.WOMAN && personList.get(in + 1).getSex() == Person.Sex_Enum.MAN)
+                    if ((personList.get(in).getSex() == Sex_Enum.WOMAN && personList.get(in + 1).getSex() == Sex_Enum.MAN)
                             || (personList.get(in).getSex() == personList.get(in + 1).getSex()
                             && personList.get(in).getAge() < personList.get(in + 1).getAge())
                             || (personList.get(in).getSex() == personList.get(in + 1).getSex()
