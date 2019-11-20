@@ -1,5 +1,6 @@
 package task3;
 import java.util.ArrayList;
+import task3.Sex_Enum;
 /**
  @author PodolskayaEV
  CocktailSort класс для реализации сортировки перемешиванием
