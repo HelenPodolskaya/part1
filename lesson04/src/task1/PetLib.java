@@ -1,4 +1,5 @@
 package task1;
+
 import task3.Person;
 
 import java.util.*;
@@ -19,16 +20,21 @@ public class PetLib {
         petHashMap.put(pet.getPetID(), pet);
     }
 
-    public void setPetName(Integer petID, String petName) {
+    public boolean setPetName(Integer petID, String petName) {
         if (petHashMap.containsKey(petID)) {
             Pet pet = petHashMap.get(petID);
             pet.setPetName(petName);
-        }
+            return true;
+        } else return false;
     }
 
-    public void setPetWeight(Integer petID, Double petWeight) {
-        Pet pet = petHashMap.get(petID);
-        pet.setPetWeight(petWeight);
+    public boolean setPetWeight(Integer petID, Double petWeight) {
+        if (petHashMap.containsKey(petID)) {
+            Pet pet = petHashMap.get(petID);
+            pet.setPetWeight(petWeight);
+            return true;
+        }
+        else return false;
     }
 
     public List<Pet> findPet(String petName) {
