@@ -9,7 +9,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author PodolskayaEV
- * Разработать программу – картотеку домашних животных.
+ * Разработать программу – картотеку домашних животных. У каждого животного есть уникальный идентификационный номер, кличка, хозяин (объект класс Person с полями – имя, возраст, пол), вес.
+ * <p>
+ * Реализовать:
+ * <p>
+ * метод добавления животного в общий список (учесть, что добавление дубликатов должно приводить к исключительной ситуации)
+ * поиск животного по его кличке (поиск должен быть эффективным)
+ * изменение данных животного по его идентификатору
+ * вывод на экран списка животных в отсортированном порядке. Поля для сортировки –  хозяин, кличка животного, вес.
  */
 public class Main {
     private static Scanner in = new Scanner(System.in);
@@ -17,18 +24,6 @@ public class Main {
     private static AtomicInteger ai = new AtomicInteger();
 
     public static void main(String[] args) {
-        Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Sex_Enum.MAN, "Вася"), 10.0);
-        Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet2 = new Pet(ai.incrementAndGet(), "Зайчик", new Person((short) 9, Sex_Enum.MAN, "Саша"), 5.0);
-        Pet pet3 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet4 = new Pet(ai.incrementAndGet(), "Кеша", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 0.15);
-        Pet pet5 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.MAN, "Саша"), 8.0);
-        petsLibrary.addPet(pet);
-        petsLibrary.addPet(pet1);
-        petsLibrary.addPet(pet2);
-        petsLibrary.addPet(pet3);
-        petsLibrary.addPet(pet4);
-        petsLibrary.addPet(pet5);
         while (readIsExit() != 1) {
             System.out.println("Выберите действие:\n1- Добавить животное в картатеку;\n2-Изменить имя животного\n3-Изменить вес животного\n4-Найти животное\n5-Вывести всех животных, отсортированных по имени\n6-Вывести список жиовтных,отсортированных по весу\n7-Вывести список животных\n");
             try {
@@ -134,6 +129,12 @@ public class Main {
         }
     }
 
+    /**
+     * поиск животного по его кличке
+     *
+     * @return Pet
+     * @throws PetLibException
+     */
     private static Pet findPet() throws PetLibException {
         List<Pet> resPets = petsLibrary.findPetByOwner(new Person(getInOwnerAge(), getInOwnerSex(), getInOwnerName()));
         String petName = getInPetName("Введите имя животного:");
@@ -147,6 +148,12 @@ public class Main {
         throw new PetLibException("Живонтое с таким именем не найдено!");
     }
 
+    /**
+     * добавить животное в картатеку
+     *
+     * @return boolean true/false
+     * @throws PetLibException
+     */
     private static boolean addPet() throws PetLibException {
         boolean resAdd = false;
         try {
@@ -167,6 +174,12 @@ public class Main {
         return resAdd;
     }
 
+    /**
+     * Изменить имя животного
+     *
+     * @return true - изменено,false  не изменено
+     * @throws PetLibException
+     */
     private static boolean changePetName() throws PetLibException {
         boolean resChange = false;
         Pet pet = findPet();
@@ -176,6 +189,12 @@ public class Main {
         return resChange;
     }
 
+    /**
+     * Изменить вес животного
+     *
+     * @return boolean true/false
+     * @throws PetLibException
+     */
     private static boolean changePetWeight() throws PetLibException {
         boolean resChange = false;
         Pet pet = findPet();
