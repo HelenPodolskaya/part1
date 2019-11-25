@@ -13,24 +13,28 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Main {
     private static Scanner in = new Scanner(System.in);
-    private static PetLib petsLibrary = new PetLib();
+    private static IPetLib petsLibrary = new PetLib();
     private static AtomicInteger ai = new AtomicInteger();
 
-    public static void main(String[] args) {
-        Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Sex_Enum.MAN, "Вася"), 10.0);
-        Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet2 = new Pet(ai.incrementAndGet(), "Зайчик", new Person((short) 9, Sex_Enum.MAN, "Саша"), 5.0);
-        Pet pet3 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
-        Pet pet4 = new Pet(ai.incrementAndGet(), "Кеша", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 0.15);
-        Pet pet5 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.MAN, "Саша"), 8.0);
-        petsLibrary.addPet(pet);
-        petsLibrary.addPet(pet1);
-        petsLibrary.addPet(pet2);
-        petsLibrary.addPet(pet3);
-        petsLibrary.addPet(pet4);
-        petsLibrary.addPet(pet5);
+    public static void main(String[] args) throws PetLibException {
+        try {
+            Pet pet = new Pet(ai.incrementAndGet(), "Пушок", new Person((short) 10, Sex_Enum.MAN, "Вася"), 10.0);
+            Pet pet1 = new Pet(ai.incrementAndGet(), "Муся", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
+            Pet pet2 = new Pet(ai.incrementAndGet(), "Зайчик", new Person((short) 9, Sex_Enum.MAN, "Саша"), 5.0);
+            Pet pet3 = new Pet(ai.incrementAndGet(), "Мурка", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
+            Pet pet4 = new Pet(ai.incrementAndGet(), "Кеша", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 0.15);
+            Pet pet5 = new Pet(ai.incrementAndGet(), "Муська", new Person((short) 11, Sex_Enum.WOMAN, "Маша"), 8.0);
+            petsLibrary.addPet(pet);
+            petsLibrary.addPet(pet1);
+            petsLibrary.addPet(pet2);
+            petsLibrary.addPet(pet3);
+            petsLibrary.addPet(pet4);
+            petsLibrary.addPet(pet5);
+        } catch (PetLibException ex) {
+            System.out.println(ex.getMessage());
+        }
         while (readIsExit() != 1) {
-            System.out.println("Выберите действие:\n1- Добавить животное в картатеку;\n2-Изменить имя животного\n3-Изменить вес животного\n4-Найти животное\n5-Вывести всех животных, отсортированных по имени\n6-Вывести список жиовтных,отсортированных по весу\n7-Вывести список животных\n");
+            System.out.println("Выберите действие:\n1- Добавить животное в картатеку;\n2-Изменить имя животного\n3-Изменить вес животного\n4-Найти животное\n5-Вывести всех животных, отсортированных по имени\n6-Вывести список жиовтных,отсортированных по весу\n7-Вывести список животных, отсортированных по владельцу\n8-Вывести список всех животных\n");
             try {
                 switch (in.nextInt()) {
                     case 1:
@@ -38,7 +42,6 @@ public class Main {
                         break;
                     case 2:
                         if (changePetName()) System.out.println("Имя изменено!");
-                        else System.out.println("Имя не изменено!");
                         break;
                     case 3:
                         if (changePetWeight()) System.out.println("Вес изменён!");
@@ -47,12 +50,15 @@ public class Main {
                         printPets(petsLibrary.findPet(getInPetName("Введите имя животного:")));
                         break;
                     case 5:
-                        printPets(petsLibrary.sortPets(new PetNameComparator()));
+                        printPets(petsLibrary.sortPets(Comparator.comparing(Pet::getPetName)));
                         break;
                     case 6:
-                        printPets(petsLibrary.sortPets(new PetWeightComparator()));
+                        printPets(petsLibrary.sortPets(Comparator.comparing(Pet::getPetWeight)));
                         break;
                     case 7:
+                        printPets(petsLibrary.sortPets(new PetOwnerComparator()));
+                        break;
+                    case 8:
                         printPets(petsLibrary.getPetHashMap().values());
                         break;
                     default:
@@ -93,7 +99,7 @@ public class Main {
         return stringBuilder.toString();
     }
 
-    private static String getInOwnerName() throws PetLibException {
+    private static String getInOwnerName() {
         System.out.println("Введите имя хозяина:");
         String ownerName = in.next();
         return ownerName;
@@ -109,13 +115,13 @@ public class Main {
         return ownerSex;
     }
 
-    private static short getInOwnerAge() throws PetLibException {
-        short ownerAge;
+    private static short getInOwnerAge() {
+        short ownerAge = 0;
         try {
             System.out.println("Введите возраст хозяина:");
             ownerAge = in.nextShort();
         } catch (InputMismatchException ex) {
-            throw new PetLibException("Возраст владельца введен неверно!");
+            System.out.println("Возраст владельца введен неверно!");
         }
         return ownerAge;
     }
@@ -125,40 +131,21 @@ public class Main {
         return in.next();
     }
 
-    private static Double getInPetWeight() throws PetLibException {
+    private static Double getInPetWeight() {
         try {
             System.out.println("Введите вес животного:");
             return in.nextDouble();
         } catch (InputMismatchException ex) {
-            throw new PetLibException("Некорректно задан вес!");
+            System.out.println("Некорректно задан вес!");
         }
+        return null;
     }
 
-    private static Pet findPet() throws PetLibException {
-        List<Pet> resPets = petsLibrary.findPetByOwner(new Person(getInOwnerAge(), getInOwnerSex(), getInOwnerName()));
-        String petName = getInPetName("Введите имя животного:");
-        ListIterator<Pet> itr = resPets.listIterator();
-        while (itr.hasNext()) {
-            Pet pet = itr.next();
-            if (pet.getPetName().equals(petName)) {
-                return pet;
-            }
-        }
-        throw new PetLibException("Живонтое с таким именем не найдено!");
-    }
-
-    private static boolean addPet() throws PetLibException {
+    private static boolean addPet() {
         boolean resAdd = false;
         try {
             Person person = new Person(getInOwnerAge(), getInOwnerSex(), getInOwnerName());
-            List<Pet> resPets = petsLibrary.findPetByOwner(person);
             String petName = getInPetName("Введите имя животного:");
-            ListIterator<Pet> itr = resPets.listIterator();
-            while (itr.hasNext()) {
-                if (itr.next().getPetName().equals(petName)) {
-                    throw new PetLibException("Такое животное уже есть!");
-                }
-            }
             petsLibrary.addPet(new Pet(ai.incrementAndGet(), petName, person, getInPetWeight()));
             resAdd = true;
         } catch (PetLibException ex) {
@@ -167,21 +154,26 @@ public class Main {
         return resAdd;
     }
 
+    private static Integer getInPetID() {
+        try {
+            System.out.println("Введите id  животного:");
+            return in.nextInt();
+        } catch (InputMismatchException ex) {
+            System.out.println("Некорректно задан id!");
+        }
+        return null;
+    }
+
     private static boolean changePetName() throws PetLibException {
-        boolean resChange = false;
-        Pet pet = findPet();
-        String newPetName = getInPetName("Введите новое имя животного:");
-        resChange = petsLibrary.setPetName(pet.getPetID(), newPetName);
-        if (!resChange) System.out.println("Живонтое с таким именем не найдено!");
-        return resChange;
+        Integer petID = getInPetID();
+        String newPetName = getInPetName("Введите новое имя животного");
+        return petsLibrary.setPetName(petID, newPetName);
     }
 
     private static boolean changePetWeight() throws PetLibException {
-        boolean resChange = false;
-        Pet pet = findPet();
+        Integer petID = getInPetID();
         Double newPetWeight = getInPetWeight();
-        resChange = petsLibrary.setPetWeight(pet.getPetID(), newPetWeight);
-        return resChange;
+        return petsLibrary.setPetWeight(petID, newPetWeight);
     }
 
     private static int readIsExit() {

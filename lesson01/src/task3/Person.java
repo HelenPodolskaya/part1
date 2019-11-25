@@ -8,9 +8,6 @@ package task3;
 public class Person {
     // имена полей с маленькой буквы
     private short Age;
-    // имена классов в camel case с большой буквы
-    // плохое место для его объявления, лучше внизу класса или вообще отдельно
-    protected enum Sex_Enum{MAN, WOMAN}
     private Sex_Enum Sex;
     private String Name;
 
