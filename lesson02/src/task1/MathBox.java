@@ -44,10 +44,11 @@ public class MathBox extends ObjectBox<Number> {
         Number summ = 0;
         Iterator<Number> itr = this.getObjectsList().iterator();
         while (itr.hasNext()) {
-            summ = sumNumbers(summ,itr.next());
+            summ = sumNumbers(summ, itr.next());
         }
         return summ;
     }
+
     private Number sumNumbers(Number first, Number second) {
         if (first instanceof Double || second instanceof Double) {
             return first.doubleValue() + second.doubleValue();
@@ -63,24 +64,25 @@ public class MathBox extends ObjectBox<Number> {
             return first.byteValue() + second.byteValue();
         }
     }
+
     /**
      * каждый элемент в списке делится на divider
      *
      * @param divider делитель
      */
-    public void splitter(int divider) {
+    public LinkedHashSet<Number> splitter(int divider) {
         LinkedHashSet<Number> resObj = new LinkedHashSet<>();
         for (Number nmb : this.getObjectsList()) {
             resObj.add(divNumbers(nmb, divider));
         }
-        this.setObjectsList(resObj);
+        return resObj;
     }
 
     private Number divNumbers(Number first, Integer second) {
         if (first instanceof Double) {
             return first.doubleValue() / second;
         } else if (first instanceof Float) {
-            return first.floatValue() /second;
+            return first.floatValue() / second;
         } else if (first instanceof Long) {
             return first.longValue() / second;
         } else if (first instanceof Integer) {
@@ -98,7 +100,7 @@ public class MathBox extends ObjectBox<Number> {
      * @param number элемент который нужно удалить
      */
     public boolean delete(int number) {
-        return this.getObjectsList().removeIf(n -> (n.equals((double)number)));
+        return this.getObjectsList().removeIf(n -> (n.equals((double) number)));
     }
 
     @Override
@@ -111,6 +113,9 @@ public class MathBox extends ObjectBox<Number> {
 
     @Override
     public int hashCode() {
-        return uniqueId.hashCode();
+        int res = 0;
+        for (Number n : this.getObjectsList())
+            res += n.hashCode();
+        return res;
     }
 }

@@ -36,8 +36,7 @@ public class Main {
                         break;
                     case 2:
                         System.out.println("введите делитель:");
-                        mb.splitter(in.nextInt());
-                        System.out.println(mb.toString());
+                        System.out.println(mb.splitter(in.nextInt()));
                         break;
                     case 3:
                         System.out.println("введите число:");
