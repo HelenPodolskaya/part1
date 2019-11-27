@@ -1,5 +1,7 @@
 package task2;
+
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * класс для генерации текста
@@ -10,6 +12,7 @@ public class WordsWorker {
 
     /**
      * метод, генерирующий слово
+     *
      * @param isUp показывает, начинается слово с заглавной буквы или нет
      * @return слово
      */
@@ -31,6 +34,7 @@ public class WordsWorker {
 
     /**
      * метод, генерирующий масссив слов
+     *
      * @return массив строк
      */
     public static ArrayList<String> generateWordsList() {
@@ -42,33 +46,43 @@ public class WordsWorker {
 
     /**
      * метод, генерирующий предложение
+     *
      * @return текст
      */
-    public static String generateSentence() {
+    public static String generateSentence(int probability, ArrayList<String> wordsList) {
         int length = (int) (Math.random() * 15 + 1);
         StringBuilder sb = new StringBuilder();
-        sb.append(generateWord(true));
-        for (int i = 0; i <= length; i++) {
-            sb.append(generateWord(false));
-            sb.append(" ");
+        if (getProbability(probability) == 1)
+            sb.append(wordsList.get((int) (Math.random() * 1000)));
+        else {
+            sb.append(generateWord(true));
+            for (int i = 0; i <= length; i++) {
+                sb.append(generateWord(false));
+                sb.append(" ");
+            }
         }
         length = (int) (Math.random() * 3);
         sb.append(sighns, length, length + 1);
         return sb.toString();
     }
 
+    public static int getProbability(int probability) {
+        return ThreadLocalRandom.current().nextInt(10) > probability ? 1 : 0;
+    }
+
     /**
      * метод, генерирующий текст
+     *
      * @param paragraphCount количество абзацев
      * @return сгенерированный текст
      */
-    public static String generateText(int paragraphCount) {
+    public static String generateText(int paragraphCount, int probability, ArrayList<String> wordsList) {
         int sentenceCountInParagraph = (int) (Math.random() * 20 + 1);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < paragraphCount; i++) {
             sb.append(" \t");
             for (int j = 0; j <= sentenceCountInParagraph; j++)
-                sb.append(generateSentence());
+                sb.append(generateSentence(probability, wordsList));
             sb.append("\r\n");
         }
         return sb.toString();

@@ -3,7 +3,6 @@ package task2;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,14 +25,12 @@ import java.util.ArrayList;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        // for (int i = 0; i < 10; i++)
-        // System.out.print(WordsWorker.generateText(4));
-        // writeFile("note.txt", WordsWorker.generateText(40000));
-        getFiles("C:\\temp", 3, 40000, WordsWorker.generateWordsList(), 1);
+       getFiles("C:\\temp", 3, 40000, WordsWorker.generateWordsList(), 3);
     }
 
     /**
      * добавить запись в файл
+     *
      * @param fileName
      * @param content
      */
@@ -49,11 +46,12 @@ public class Main {
     }
 
     /**
-     *метод, создающий файлы
-     * @param path каталог
-     * @param n файлов
-     * @param size размер файлов
-     * @param words массив слов
+     * метод, создающий файлы
+     *
+     * @param path        каталог
+     * @param n           файлов
+     * @param size        размер файлов
+     * @param words       массив слов
      * @param probability вероятность попадания слова
      * @throws IOException
      */
@@ -67,7 +65,7 @@ public class Main {
             Path filePath = Paths.get(dirpath.toString(), fileName + j + ".txt");
             if (Files.notExists(filePath)) Files.createFile(filePath);
             while (Files.size(filePath) < size) {
-                writeFile(filePath.toString(), WordsWorker.generateText(1));
+                writeFile(filePath.toString(), WordsWorker.generateText(1, probability,words));
             }
         }
     }
