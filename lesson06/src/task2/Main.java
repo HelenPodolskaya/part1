@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Создать генератор текстовых файлов, работающий по следующим правилам:
@@ -24,8 +25,15 @@ import java.util.ArrayList;
  * который создаст n файлов размером size в каталоге path. words - массив слов, probability - вероятность.
  */
 public class Main {
+    private static final int filesCount = 4;//   n           файлов
+    private static final int probability = 5;//  probability вероятность попадания слова
+    private static Scanner in = new Scanner(System.in);
+    private static WordLib wordLib = new WordLib();
+
     public static void main(String[] args) throws IOException {
-       getFiles("C:\\temp", 3, 40000, WordsWorker.generateWordsList(), 3);
+        System.out.println("Введите путь к файлу:");
+        Path path = Paths.get(in.next());
+        getFiles(path, 40000, wordLib.getWordsList());
     }
 
     /**
@@ -38,8 +46,6 @@ public class Main {
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName, true)) {
             byte[] buffer = content.getBytes();
             fileOutputStream.write(buffer);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,24 +54,21 @@ public class Main {
     /**
      * метод, создающий файлы
      *
-     * @param path        каталог
-     * @param n           файлов
-     * @param size        размер файлов
-     * @param words       массив слов
-     * @param probability вероятность попадания слова
+     * @param path  каталог
+     * @param size  размер файлов
+     * @param words массив слов
      * @throws IOException
      */
-    public static void getFiles(String path, int n, int size, ArrayList<String> words, int probability) throws IOException {
+    public static void getFiles(Path path, int size, ArrayList<String> words) throws IOException {
         String fileName = "note";
-        Path dirpath = Paths.get(path);
-        if (!Files.isDirectory(dirpath)) {
-            Files.createDirectory(dirpath);
+        if (!Files.isDirectory(path)) {
+            Files.createDirectory(path);
         }
-        for (int j = 0; j < n; j++) {
-            Path filePath = Paths.get(dirpath.toString(), fileName + j + ".txt");
+        for (int j = 0; j < filesCount; j++) {
+            Path filePath = Paths.get(path.toString(), fileName + j + ".txt");
             if (Files.notExists(filePath)) Files.createFile(filePath);
             while (Files.size(filePath) < size) {
-                writeFile(filePath.toString(), WordsWorker.generateText(1, probability,words));
+                writeFile(filePath.toString(), WordsWorker.generateText(1, probability, words));
             }
         }
     }

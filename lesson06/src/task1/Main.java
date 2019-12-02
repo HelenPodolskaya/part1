@@ -1,11 +1,13 @@
 package task1;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,10 +23,11 @@ public class Main {
     public static void main(String[] args) {
         try {
             System.out.println("Введите путь к файлу:");
-            Path readFilePath = Paths.get( in.next());
+            Path readFilePath = Paths.get(in.next());
             if (Files.exists(readFilePath)) {
-                Path writeFilePath = Paths.get("C:\\temp\\note1.txt");
-                List<String> sortedStringList = Sort(readFile(readFilePath));
+                Path writeFilePath = Paths.get("note1.txt");
+                List<String> sortedStringList = readFile(readFilePath);
+                sortedStringList.sort(String::compareToIgnoreCase);
                 Files.write(writeFilePath, sortedStringList, StandardCharsets.UTF_8);
                 for (String s : sortedStringList)
                     System.out.println(s);
@@ -37,7 +40,10 @@ public class Main {
     private static List<String> readFile(Path path) {
         List<String> readStringList = new ArrayList<>();
         try {
-            stringList = Files.readAllLines(path);
+            FileReader fr = new FileReader(String.valueOf(path));
+            Scanner sc = new Scanner(fr);
+            while (sc.hasNext())
+                readStringList.add(sc.next());
             for (String s : stringList) {
                 String[] str = s.split("[\\p{Punct}\\s]+");
                 for (String s1 : str) {
@@ -53,21 +59,11 @@ public class Main {
                         readStringList.add(s1);
                 }
             }
+            fr.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
         return readStringList;
-    }
-
-    private static List<String> Sort(List<String> wordList) {
-        for (int out = wordList.size() - 1; out >= 1; out--) {
-            for (int in = 0; in < out; in++) {
-                int res = wordList.get(in).toLowerCase().compareTo(wordList.get(in + 1).toLowerCase());
-                if (res > 0)
-                    toSwap(wordList, in, in + 1);
-            }
-        }
-        return wordList;
     }
 
     private static void toSwap(List<String> wordList, int first, int second) {
