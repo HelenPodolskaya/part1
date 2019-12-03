@@ -23,7 +23,7 @@ public class FactorialRunnable implements Callable<BigInteger> {
     }
 
     @Override
-    public /*synchronized*/ BigInteger call() throws Exception {
+    public BigInteger call() throws Exception {
         return getNumbFactorial(startNumber,numberForFactorial,muliplyValue);
     }
 }

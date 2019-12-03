@@ -1,17 +1,15 @@
 package task1;
 
-import com.sun.org.apache.xpath.internal.objects.XNumber;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * Дан массив случайных чисел. Написать программу для вычисления факториалов всех элементов массива.
+ * Использовать пул потоков для решения задачи.
+ */
 public class Main {
     private static ConcurrentHashMap<Integer, BigInteger> numbersFactorialMap = new ConcurrentHashMap<>();
     private static ArrayList<Integer> numbersList;
@@ -64,14 +62,6 @@ public class Main {
         return false;
     }
 
-    private static BigInteger getNumbFactorial(Integer startNumber, Integer stopNumber, BigInteger multValue) {
-        BigInteger factorialNumber = multValue;
-        for (int i = startNumber; i <= stopNumber; i++) {
-            factorialNumber = factorialNumber.multiply(BigInteger.valueOf(i));
-        }
-        return factorialNumber;
-    }
-
     private static Integer getKey(Integer numb) {
         Iterator<Integer> iterator = numbersFactorialMap.keySet().iterator();
         Integer key = 1;
@@ -87,10 +77,9 @@ public class Main {
     private static ArrayList<Integer> generateNumbers(int numbCount) {
         ArrayList<Integer> numbList = new ArrayList<>();
         for (int i = 0; i < numbCount; i++) {
-            int k = (int) (1 + Math.random() * 5);// numbCount);
+            int k = (int) (1 + Math.random() * numbCount);
             numbList.add(k);
         }
-        //Collections.sort(numbList);
         return numbList;
     }
 
