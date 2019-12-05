@@ -1,29 +1,33 @@
 package task1;
 
 import java.math.BigInteger;
-import java.util.concurrent.Callable;
 
-public class FactorialRunnable implements Callable<BigInteger> {
+public class FactorialRunnable implements Runnable {
     private Integer numberForFactorial;
     private Integer startNumber;
-    private BigInteger muliplyValue;
+    private BigInteger multiplyValue;
+    private StoreMap sm;
 
-    public FactorialRunnable(Integer startNumb,Integer number,BigInteger multValue) {
+    public FactorialRunnable(Integer number, StoreMap storeMap) {
         numberForFactorial = number;
-        startNumber = startNumb;
-        muliplyValue = multValue;
+        this.sm = storeMap;
+        startNumber = storeMap.getKey(number);
+        multiplyValue = BigInteger.valueOf(1l);
+        if (storeMap.isContainsKey(startNumber)) {
+            multiplyValue = storeMap.get(startNumber);
+        }
     }
 
-    private BigInteger getNumbFactorial(Integer startNumber,Integer stopNumber,BigInteger multValue) {
-        BigInteger factorialNumber = multValue;
-        for (int i = startNumber; i <= stopNumber; i++) {
+    private BigInteger getNumbFactorial() {
+        BigInteger factorialNumber = multiplyValue;
+        for (int i = startNumber; i <= numberForFactorial; i++) {
             factorialNumber = factorialNumber.multiply(BigInteger.valueOf(i));
         }
         return factorialNumber;
     }
 
     @Override
-    public BigInteger call() {
-        return getNumbFactorial(startNumber,numberForFactorial,muliplyValue);
+    public void run() {
+        sm.put(numberForFactorial, getNumbFactorial());
     }
 }
