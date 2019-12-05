@@ -34,6 +34,7 @@ public class Main {
         System.out.println("Введите путь к файлу:");
         Path path = Paths.get(in.next());
         getFiles(path, 40000, wordLib.getWordsList());
+        in.close();
     }
 
     /**
