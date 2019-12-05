@@ -19,7 +19,7 @@ public class WordLib {
      *
      * @return массив строк
      */
-    public void generateWordsList() {
+    private void generateWordsList() {
         wordsList = new ArrayList<>();
         for (int i = 0; i < wordsCount; i++)
             wordsList.add(WordsWorker.generateWord(false));

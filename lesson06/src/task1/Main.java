@@ -32,6 +32,7 @@ public class Main {
                 for (String s : sortedStringList)
                     System.out.println(s);
             } else System.out.println("Заданный файл не существует!");
+            in.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

@@ -33,22 +33,25 @@ public class WordsWorker {
      *
      * @return текст
      */
-    public static String generateSentence(int probability, ArrayList<String> wordsList) {
+    private static String generateSentence(int probability, ArrayList<String> wordsList) {
         int length = (int) (Math.random() * 15 + 1);
         StringBuilder sb = new StringBuilder();
+        sb.append(" ");
         sb.append(generateWord(true));
         for (int i = 0; i <= length; i++) {
-            sb.append(generateWord(false));
             sb.append(" ");
+            sb.append(generateWord(false));
         }
-        if (getProbability(probability))
+        if (getProbability(probability)) {
+            sb.append(" ");
             sb.append(wordsList.get((int) (Math.random() * wordsList.size())));
+        }
         length = (int) (Math.random() * 3);
         sb.append(sighns, length, length + 1);
         return sb.toString();
     }
 
-    public static boolean getProbability(int probability) {
+    private static boolean getProbability(int probability) {
         return ThreadLocalRandom.current().nextInt(10) > probability ? true : false;
     }
 
