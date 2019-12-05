@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StoreMap {
-    public ConcurrentHashMap<Integer, BigInteger> numbersFactorialMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, BigInteger> numbersFactorialMap = new ConcurrentHashMap<>();
 
     public synchronized void put(Integer key, BigInteger value) {
         numbersFactorialMap.putIfAbsent(key, value);
