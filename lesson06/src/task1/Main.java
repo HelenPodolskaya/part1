@@ -32,16 +32,16 @@ public class Main {
                 for (String s : sortedStringList)
                     System.out.println(s);
             } else System.out.println("Заданный файл не существует!");
-            in.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+        } finally {
+            in.close();
         }
     }
 
     private static List<String> readFile(Path path) {
         List<String> readStringList = new ArrayList<>();
-        try {
-            FileReader fr = new FileReader(String.valueOf(path));
+        try (FileReader fr = new FileReader(String.valueOf(path))) {
             Scanner sc = new Scanner(fr);
             while (sc.hasNext())
                 readStringList.add(sc.next());
@@ -60,7 +60,6 @@ public class Main {
                         readStringList.add(s1);
                 }
             }
-            fr.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
