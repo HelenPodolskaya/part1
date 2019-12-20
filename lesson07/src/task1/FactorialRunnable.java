@@ -11,14 +11,14 @@ public class FactorialRunnable implements Runnable {
     public FactorialRunnable(Integer number, StoreMap storeMap) {
         numberForFactorial = number;
         this.sm = storeMap;
-        startNumber = storeMap.getKey(number);
-        multiplyValue = BigInteger.valueOf(1l);
-        if (storeMap.isContainsKey(startNumber)) {
-            multiplyValue = storeMap.get(startNumber);
-        }
     }
 
     private BigInteger getNumbFactorial() {
+        startNumber = sm.getNearestKey(numberForFactorial);
+        multiplyValue = BigInteger.valueOf(1l);
+        if (sm.isContainsKey(startNumber)) {
+            multiplyValue = sm.get(startNumber);
+        }
         BigInteger factorialNumber = multiplyValue;
         for (int i = startNumber; i <= numberForFactorial; i++) {
             factorialNumber = factorialNumber.multiply(BigInteger.valueOf(i));

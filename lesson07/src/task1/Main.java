@@ -11,13 +11,14 @@ import java.util.concurrent.*;
  * Использовать пул потоков для решения задачи.
  */
 public class Main {
+
     private static ArrayList<Integer> numbersList;
     private static List<Thread> threadsList = new ArrayList<>();
     private static ExecutorService executor;
     private static Scanner in = new Scanner(System.in);
     private static int numbersCount;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         try {
             System.out.println("Введте количество чисел:");
             numbersCount = in.nextInt();
@@ -39,11 +40,15 @@ public class Main {
                 for (int j = 0; j < threadsList.size(); j++) {
                     if (!threadsList.get(j).isAlive()) {
                         threadCount++;
-                        System.out.println("Поток: " + j + "число " + numbersList.get(j) + "Факториал: " + factorialMap.get(numbersList.get(j)));
                     }
                 }
             }
             executor.shutdown();
+            for (Integer it : numbersList)
+                System.out.println(it);
+            Thread t = Thread.currentThread();
+            t.sleep(5000);
+            System.out.println(factorialMap.toString());
             in.close();
         } catch (InputMismatchException ex) {
             System.out.println("Значение должно быть целым числом!");
