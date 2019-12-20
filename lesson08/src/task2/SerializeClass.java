@@ -21,73 +21,89 @@ public class SerializeClass {
      *
      * @param object - объект, который помещаем в поток (файл)
      */
-    public void serialize(Path fileName, Object object, boolean app) throws IllegalAccessException {
+
+
+    public void serialize(Path fileName, Object object) throws IllegalAccessException {
         file = fileName;
-        writeFile("", app);
+        writeFile("");
+        writeFile(generateSerializeText(object));
+    }
+
+    public String generateSerializeText(Object object) throws IllegalAccessException {
+        StringBuilder sb = new StringBuilder();
         //Записывем имя класса
-        writeFile("<ClassName>" + object.getClass().getName() + "</ClassName>\r\n", true);
+        sb.append(generateStringWithTags(TagsEnum.ClassName, object.getClass().getName()));
         //возвращаем поля
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field declaredField : fields) {
             declaredField.setAccessible(true);
-            writeFile("<FieldName>" + declaredField.getName() + "</FieldName>\r\n", true);
+            sb.append(generateStringWithTags(TagsEnum.FieldName, declaredField.getName()));
             //Если поле примитивного типа или String
-            if (declaredField.getType().isPrimitive() || declaredField.getType().getSimpleName().compareTo("String") == 0) {
-                writeFile("<FieldValue>" + declaredField.get(object) + "</FieldValue>\r\n", true);
+            if (declaredField.getType().isPrimitive() || declaredField.getType().getSimpleName().equals("String")) {
+                sb.append(generateStringWithTags(TagsEnum.FieldValue, declaredField.get(object).toString()));
             } else {
-                writeFile("<ClassName>" + declaredField.get(object).getClass().getName() + "</ClassName>\r\n", true);
+                String str = declaredField.get(object).getClass().getName();
+                sb.append(generateStringWithTags(TagsEnum.ClassName, declaredField.get(object).getClass().getName()));
                 //если массив
                 if (declaredField.getType().getSimpleName().matches("\\w*\\[\\]$")) {
-                    typeOfArray(declaredField.getType().getSimpleName(), declaredField.get(object));
+                    sb.append(typeOfArray(declaredField.getType().getSimpleName(), declaredField.get(object)));
                 } else {
                     //if List
                     if (declaredField.getType().getSimpleName().matches("\\w*List\\w*$")) {
-                        List<Object> al = (List<Object>) declaredField.get(object);
-                        writeFile("<FieldSize>" + al.size() + "</FieldSize>\r\n", true);
-                        for (Object o : al) {
-                            if (o.getClass().isPrimitive() || o.getClass().getSimpleName().compareTo("String") == 0)
-                                writeFile("<FieldElem>" + o.toString() + "</FieldElem>\r\n", true);
-                            else
-                                serialize(fileName, o, true);
-                        }
+                        sb.append(generateCollectionSerializeText((List<Object>) declaredField.get(object)));
                     } else
                         //if Set
                         if (declaredField.getType().getSimpleName().matches("\\w*Set\\w*$")) {
-                            Set<Object> al = (Set<Object>) declaredField.get(object);
-                            writeFile("<FieldSize>" + al.size() + "</FieldSize>\r\n", true);
-                            for (Object o : al) {
-                                if (o.getClass().isPrimitive() || o.getClass().getSimpleName().compareTo("String") == 0)
-                                    writeFile("<FieldElem>" + o.toString() + "</FieldElem>\r\n", true);
-                                else serialize(fileName, o, true);
-                            }
+                            sb.append(generateCollectionSerializeText((Set<Object>) declaredField.get(object)));
                         } else if (declaredField.getType().getSimpleName().matches("\\w*Queue\\w*$")) {
-                            Queue<Object> al = (Queue<Object>) declaredField.get(object);
-                            writeFile("<FieldSize>" + al.size() + "</FieldSize>\r\n", true);
-                            for (Object o : al) {
-                                if (o.getClass().isPrimitive() || o.getClass().getSimpleName().compareTo("String") == 0)
-                                    writeFile("<FieldElem>" + o.toString() + "</FieldElem>\r\n", true);
-                                else serialize(fileName, o, true);
-                            }
+                            sb.append(generateCollectionSerializeText((Queue<Object>) declaredField.get(object)));
                         } else if (declaredField.getType().getSimpleName().matches("\\w*Map\\w*$")) {
                             Map<Object, Object> al = (Map<Object, Object>) declaredField.get(object);
-                            writeFile("<FieldSize>" + al.size() + "</FieldSize>\r\n", true);
+                            sb.append(generateStringWithTags(TagsEnum.FieldSize, al.size()));
                             for (Map.Entry<Object, Object> entry : al.entrySet()) {
                                 if (entry.getValue().getClass().isPrimitive() || entry.getValue().getClass().getSimpleName().compareTo("String") == 0) {
-                                    writeFile("<Key>" + entry.getKey().toString() + "</Key>\r\n", true);
-                                    writeFile("<Value>" + entry.getValue().toString() + "</Value>\r\n", true);
+                                    sb.append(generateStringWithTags(TagsEnum.Key, entry.getKey()));
+                                    sb.append(generateStringWithTags(TagsEnum.Value, entry.getValue()));
                                 } else {
-                                    writeFile("<Key>" + entry.getKey().toString() + "</Key>\r\n", true);
-                                    serialize(fileName, entry.getValue(), true);
+                                    sb.append(generateStringWithTags(TagsEnum.Key, entry.getKey()));
+                                    sb.append(generateSerializeText(entry.getValue()));
                                 }
                             }
-                        } else serialize(file, declaredField.get(object), true);
+                        } else
+                            sb.append(generateSerializeText(declaredField.get(object)));
                 }
             }
         }
+        return sb.toString();
     }
 
-    private void writeFile(String content, boolean append) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(String.valueOf(file), append)) {
+    // генерация строки с тегом для записи в файл
+    public String generateStringWithTags(TagsEnum tag, Object value) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<");
+        sb.append(tag.toString());
+        sb.append(">");
+        sb.append(Objects.nonNull(value) ? value.toString() : "null");
+        sb.append("</");
+        sb.append(tag.toString());
+        sb.append(">\r\n");
+        return sb.toString();
+    }
+    // генерация строки с тегом для записи  колеекции в файл
+    private String generateCollectionSerializeText(Collection<?> collection) throws IllegalAccessException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(generateStringWithTags(TagsEnum.FieldSize, collection.size()));
+        for (Object o : collection) {
+            if (o.getClass().isPrimitive() || o.getClass().getSimpleName().equals("String"))
+                sb.append(generateStringWithTags(TagsEnum.FieldElem, o));
+            else
+                sb.append(generateSerializeText(o));
+        }
+        return sb.toString();
+    }
+
+    private void writeFile(String content) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(String.valueOf(file), false)) {
             byte[] buffer = content.getBytes();
             fileOutputStream.write(buffer);
         } catch (IOException e) {
@@ -105,9 +121,9 @@ public class SerializeClass {
         file = fileName;
         String className = readClassName(file);
         if (className.compareTo("") != 0) {
-            return createClass(className);
+            return instantiateObjectOfClass(className);
         } else
-            return new Object();//если класс не прочитали,пробросить ошибку
+            throw new SerializeExceptionClass("Ошибка при десериализации класса.");
     }
 
     private String readClassName(Path file) throws IOException {
@@ -126,7 +142,7 @@ public class SerializeClass {
                 if (className.compareTo(parseLine(sc.nextLine(), "ClassName")) == 0) {
                     while (sc.hasNextLine()) {
                         if (field.getName().compareTo(parseLine(sc.nextLine(), "FieldName")) == 0) {
-                            if ((field.getType().isPrimitive() || field.getType().getSimpleName().compareTo("String") == 0) && sc.hasNextLine()) {
+                            if ((field.getType().isPrimitive() || field.getType().getSimpleName().equals("String")) && sc.hasNextLine()) {
                                 setField(field.getName(), typeOf(field.getType().getSimpleName(), parseLine(sc.nextLine(), "FieldValue")), obj);
                                 break;
                             } else if ((!field.getType().isPrimitive() && sc.hasNextLine()) &&
@@ -160,23 +176,23 @@ public class SerializeClass {
         if (parseLine(str, "ClassName").compareTo("") == 0 && !isMap)
             pushCollection(currentClassName, sizeSimpleArray, obj, field, "add", new Class[]{Object.class}, new Object[]{typeOf(field.getType().getSimpleName(), parseLine(str, "FieldElem"))});
         if (parseLine(str, "ClassName").compareTo("") != 0 && !isMap)
-            pushCollection(currentClassName, sizeSimpleArray, obj, field, "add", new Class[]{Object.class}, new Object[]{createClass(parseLine(str, "ClassName"))});
+            pushCollection(currentClassName, sizeSimpleArray, obj, field, "add", new Class[]{Object.class}, new Object[]{instantiateObjectOfClass(parseLine(str, "ClassName"))});
         if (isMap) {
             Object key;
             if (parseLine(str, "ClassName").compareTo("") == 0)
                 key = typeOf(field.getType().getSimpleName(), parseLine(str, "Key"));
-            else key = createClass(str);
+            else key = instantiateObjectOfClass(str);
             String str1 = sc.nextLine();
             if (parseLine(str1, "ClassName").compareTo("") == 0)
                 pushCollection(currentClassName, sizeSimpleArray, obj, field, "put", new Class[]{Object.class, Object.class}, new Object[]{key, typeOf(field.getType().getSimpleName(), parseLine(str1, "Value"))});
             else {
-                pushCollection(currentClassName, sizeSimpleArray, obj, field, "put", new Class[]{Object.class, Object.class}, new Object[]{key, createClass(parseLine(str1, "ClassName"))});
+                pushCollection(currentClassName, sizeSimpleArray, obj, field, "put", new Class[]{Object.class, Object.class}, new Object[]{key, instantiateObjectOfClass(parseLine(str1, "ClassName"))});
 
             }
         }
     }
 
-    private Object createClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NoSuchFieldException, IOException {
+    private Object instantiateObjectOfClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NoSuchFieldException, IOException {
         Class<?> c = Class.forName(className);
         Object obj = c.newInstance();
         Field[] fields = obj.getClass().getDeclaredFields();
@@ -211,54 +227,56 @@ public class SerializeClass {
         type.set(obj, fieldValue);
     }
 
-    private void typeOfArray(String typeName, Object obj) {
+    private String typeOfArray(String typeName, Object obj) {
+        StringBuilder sb = new StringBuilder();
         switch (typeName) {
             case "int[]":
-                writeFile("<FieldSize>" + ((int[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((int[]) obj).length));
                 for (int i = 0; i < ((int[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((int[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((int[]) obj)[i]));
                 break;
             case "long[]":
-                writeFile("<FieldSize>" + ((long[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((long[]) obj).length));
                 for (int i = 0; i < ((long[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((long[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((long[]) obj)[i]));
                 break;
             case "float[]":
-                writeFile("<FieldSize>" + ((float[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((float[]) obj).length));
                 for (int i = 0; i < ((float[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((float[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((float[]) obj)[i]));
                 break;
             case "double[]":
-                writeFile("<FieldSize>" + ((double[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((double[]) obj).length));
                 for (int i = 0; i < ((double[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((double[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((double[]) obj)[i]));
                 break;
             case "char[]":
-                writeFile("<FieldSize>" + ((char[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((char[]) obj).length));
                 for (int i = 0; i < ((char[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((char[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((char[]) obj)[i]));
                 break;
             case "String[]":
-                writeFile("<FieldSize>" + ((String[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((String[]) obj).length));
                 for (int i = 0; i < ((String[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((String[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((String[]) obj)[i]));
                 break;
             case "byte[]":
-                writeFile("<FieldSize>" + ((byte[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((byte[]) obj).length));
                 for (int i = 0; i < ((byte[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((byte[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((byte[]) obj)[i]));
                 break;
             case "boolean[]":
-                writeFile("<FieldSize>" + ((boolean[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((boolean[]) obj).length));
                 for (int i = 0; i < ((boolean[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((boolean[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((boolean[]) obj)[i]));
                 break;
             case "short[]":
-                writeFile("<FieldSize>" + ((short[]) obj).length + "</FieldSize>\r\n", true);
+                sb.append(generateStringWithTags(TagsEnum.FieldSize, ((short[]) obj).length));
                 for (int i = 0; i < ((short[]) obj).length; i++)
-                    writeFile("<FieldElem>" + ((short[]) obj)[i] + "</FieldElem>\r\n", true);
+                    sb.append(generateStringWithTags(TagsEnum.FieldElem, ((short[]) obj)[i]));
                 break;
         }
+        return sb.toString();
     }
 
     private void setSimpleArray(Scanner sc, Field field, Object obj) throws

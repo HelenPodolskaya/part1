@@ -17,7 +17,7 @@ public class Main {
         try {
             Path fileName = Paths.get(in.next());
             SerializeClass sc = new SerializeClass();
-            sc.serialize(fileName, new MyObject(new int[]{1}, (short) 2, "serialize"), false);
+            sc.serialize(fileName, new MyObject(new int[]{1}, (short) 2, "serialize"));
             Object obj = sc.deSerialize(fileName);
             MyObject myObject = (MyObject) obj;
             System.out.print(myObject.toString());
@@ -33,8 +33,11 @@ public class Main {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
+        }catch (SerializeExceptionClass e) {
+            e.printStackTrace();
         } finally {
             in.close();
         }
     }
 }
+
