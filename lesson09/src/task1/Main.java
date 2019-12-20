@@ -39,7 +39,7 @@ public class Main {
             JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
             javaCompiler.run(null, null, null, path.toAbsolutePath().toString());
 
-            MyClassLoader classLoader = new MyClassLoader();
+            MyClassLoader classLoader = new MyClassLoader(path.getParent());
 
             Class<?> loadSomeClass = classLoader.loadClass("task1.SomeClass");
             Worker interfaceWorker = (Worker) loadSomeClass.newInstance();

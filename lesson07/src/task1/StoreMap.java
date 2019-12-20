@@ -2,26 +2,40 @@ package task1;
 
 import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StoreMap {
     private ConcurrentHashMap<Integer, BigInteger> numbersFactorialMap = new ConcurrentHashMap<>();
 
-    public synchronized void put(Integer key, BigInteger value) {
+    public void put(Integer key, BigInteger value) {
         numbersFactorialMap.putIfAbsent(key, value);
     }
 
-    public synchronized BigInteger get(Integer key) {
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Integer, BigInteger> entry : numbersFactorialMap.entrySet()) {
+            sb.append("Число ");
+            sb.append(entry.getKey());
+            sb.append("Факториал: ");
+            sb.append(entry.getValue());
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public BigInteger get(Integer key) {
         if (numbersFactorialMap.containsKey(key))
             return numbersFactorialMap.get(key);
         else return BigInteger.valueOf(1l);
     }
 
-    public synchronized boolean isContainsKey(Integer key) {
+    public boolean isContainsKey(Integer key) {
         return numbersFactorialMap.containsKey(key);
     }
 
-    public synchronized Integer getKey(Integer numb) {
+    public Integer getNearestKey(Integer numb) {
         Iterator<Integer> iterator = numbersFactorialMap.keySet().iterator();
         Integer key = 1;
         while ((iterator.hasNext())) {

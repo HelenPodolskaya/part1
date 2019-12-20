@@ -1,9 +1,7 @@
 package task1;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.math.BigInteger;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -39,11 +37,13 @@ public class Main {
                 for (int j = 0; j < threadsList.size(); j++) {
                     if (!threadsList.get(j).isAlive()) {
                         threadCount++;
-                        System.out.println("Поток: " + j + "число " + numbersList.get(j) + "Факториал: " + factorialMap.get(numbersList.get(j)));
                     }
                 }
             }
             executor.shutdown();
+            for (Integer it: numbersList)
+                System.out.println(it);
+            System.out.println(factorialMap.toString());
             in.close();
         } catch (InputMismatchException ex) {
             System.out.println("Значение должно быть целым числом!");
