@@ -37,59 +37,8 @@ public class Main {
                 if (methodSort != 1 && methodSort != 2)
                     throw new RuntimeException("Неверное число!\n");
                 long startTime = System.currentTimeMillis();
-                ISorter sorter;
-                switch (methodSort) {
-                    case 1:
-                        sorter = (listForSort) -> {
-                            for (int out = listForSort.size() - 1; out >= 1; out--) {
-                                for (int i = 0; i < out; i++) {
-                                    int res = listForSort.get(i).getName().compareTo(listForSort.get(i + 1).getName());
-                                    if ((listForSort.get(i).getSex() == Sex_Enum.WOMAN && listForSort.get(i + 1).getSex() == Sex_Enum.MAN)
-                                            || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
-                                            && listForSort.get(i).getAge() < listForSort.get(i + 1).getAge())
-                                            || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
-                                            && listForSort.get(i).getAge() <= listForSort.get(i + 1).getAge() && (res > 0)))
-                                        toSwap(listForSort, i, i + 1);
-                                    // а вот если нам нужно провалидировать входные данные, то лучше это сделать сразу
-                                    if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i + 1).getAge())
-                                        throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
-                                }
-                            }
-                        };
-                        sorter.Sort(personList);
-                    case 2:
-                        sorter = (listForSort) -> {
-                            int left = 0;
-                            int right = listForSort.size() - 1;
-                            do {
-                                for (int i = left; i < right; i++) {
-                                    int res = listForSort.get(i).getName().compareTo(listForSort.get(i + 1).getName());
-                                    if ((listForSort.get(i).getSex() == Sex_Enum.WOMAN && listForSort.get(i + 1).getSex() == Sex_Enum.MAN)
-                                            || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
-                                            && listForSort.get(i).getAge() < listForSort.get(i + 1).getAge())
-                                            || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
-                                            && listForSort.get(i).getAge() <= listForSort.get(i + 1).getAge() && (res > 0)))
-                                        toSwap(listForSort, i, i + 1);
-                                    if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i + 1).getAge())
-                                        throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
-                                }
-                                right--;
-                                for (int i = right; i > left; i--) {
-                                    int res = listForSort.get(i).getName().compareTo(listForSort.get(i - 1).getName());
-                                    if ((listForSort.get(i).getSex() == Sex_Enum.MAN && listForSort.get(i - 1).getSex() == Sex_Enum.WOMAN)
-                                            || (listForSort.get(i).getSex() == listForSort.get(i - 1).getSex()
-                                            && listForSort.get(i).getAge() > listForSort.get(i - 1).getAge())
-                                            || (listForSort.get(i).getSex() == listForSort.get(i - 1).getSex()
-                                            && listForSort.get(i).getAge() >= listForSort.get(i - 1).getAge() && (res < 0)))
-                                        toSwap(listForSort, i, i - 1);
-                                    if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i - 1).getAge())
-                                        throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
-                                }
-                                left++;
-                            } while (left < right);
-                        };
-                        sorter.Sort(personList);
-                }
+                ISorter sorter = getSorter(methodSort);
+                sorter.Sort(personList);
                 PrintPerson(personList);
                 long stopTime = System.currentTimeMillis();
                 long elapsedTime = stopTime - startTime;
@@ -107,6 +56,60 @@ public class Main {
             } finally {
 
             }
+        }
+    }
+
+    private static ISorter getSorter(int methodSort) {
+        switch (methodSort) {
+            case 1:
+                return (listForSort) -> {
+                    for (int out = listForSort.size() - 1; out >= 1; out--) {
+                        for (int i = 0; i < out; i++) {
+                            int res = listForSort.get(i).getName().compareTo(listForSort.get(i + 1).getName());
+                            if ((listForSort.get(i).getSex() == Sex_Enum.WOMAN && listForSort.get(i + 1).getSex() == Sex_Enum.MAN)
+                                    || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
+                                    && listForSort.get(i).getAge() < listForSort.get(i + 1).getAge())
+                                    || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
+                                    && listForSort.get(i).getAge() <= listForSort.get(i + 1).getAge() && (res > 0)))
+                                toSwap(listForSort, i, i + 1);
+                            if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i + 1).getAge())
+                                throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
+                        }
+                    }
+                };
+            case 2:
+                return (listForSort) -> {
+                    int left = 0;
+                    int right = listForSort.size() - 1;
+                    do {
+                        for (int i = left; i < right; i++) {
+                            int res = listForSort.get(i).getName().compareTo(listForSort.get(i + 1).getName());
+                            if ((listForSort.get(i).getSex() == Sex_Enum.WOMAN && listForSort.get(i + 1).getSex() == Sex_Enum.MAN)
+                                    || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
+                                    && listForSort.get(i).getAge() < listForSort.get(i + 1).getAge())
+                                    || (listForSort.get(i).getSex() == listForSort.get(i + 1).getSex()
+                                    && listForSort.get(i).getAge() <= listForSort.get(i + 1).getAge() && (res > 0)))
+                                toSwap(listForSort, i, i + 1);
+                            if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i + 1).getAge())
+                                throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
+                        }
+                        right--;
+                        for (int i = right; i > left; i--) {
+                            int res = listForSort.get(i).getName().compareTo(listForSort.get(i - 1).getName());
+                            if ((listForSort.get(i).getSex() == Sex_Enum.MAN && listForSort.get(i - 1).getSex() == Sex_Enum.WOMAN)
+                                    || (listForSort.get(i).getSex() == listForSort.get(i - 1).getSex()
+                                    && listForSort.get(i).getAge() > listForSort.get(i - 1).getAge())
+                                    || (listForSort.get(i).getSex() == listForSort.get(i - 1).getSex()
+                                    && listForSort.get(i).getAge() >= listForSort.get(i - 1).getAge() && (res < 0)))
+                                toSwap(listForSort, i, i - 1);
+                            if (res == 0 && listForSort.get(i).getAge() == listForSort.get(i - 1).getAge())
+                                throw new RuntimeException("Имена людей и возраст совпадают " + listForSort.get(i).getName() + " " + listForSort.get(i).getAge());
+                        }
+                        left++;
+                    } while (left < right);
+                };
+            default:
+                throw new IllegalStateException("Метод номер: " + methodSort+" не определен!");
         }
     }
 
