@@ -4,16 +4,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public interface IPetLib<P> {
-    Map<Integer, P> getPetHashMap();
+public interface IPetLib<Pet> {
+    Map<Integer, Pet> getPetHashMap();
 
-    boolean addPet(P p) throws PetLibException;
+    boolean addPet(Pet p) throws PetLibException;
 
     boolean setPetName(Integer ID, String Name) throws PetLibException;
 
     boolean setPetWeight(Integer ID, Double Weight) throws PetLibException;
 
-    List<P> findPet(String name) throws PetLibException;
+    List<Pet> findPet(String name) throws PetLibException;
 
-    List<P> sortPets(Comparator<P> pComparator);
+    List<Pet> sortPets(Comparator<Pet> pComparator);
 }
