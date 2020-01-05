@@ -1,17 +1,26 @@
 package task1;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public class User {
-    public Integer id;
-    public String name;
-    public LocalDate birthday;
-    public Integer login_id;
-    public String city;
-    public String email;
-    public String description;
+    private Integer id;
+    private String name;
 
-    public User(Integer id, String name, LocalDate birthday, Integer login_id, String city, String email, String description) {
+    public User(String name, Date birthday, String city, String email, String description) {
+        this.name = name;
+        this.birthday = birthday;
+        this.city = city;
+        this.email = email;
+        this.description = description;
+    }
+
+    private Date birthday;
+    private Integer login_id;
+    private String city;
+    private String email;
+    private String description;
+
+    public User(Integer id, String name, Date birthday, Integer login_id, String city, String email, String description) {
         this.id = id;
         this.name = name;
         this.birthday = birthday;
@@ -19,6 +28,9 @@ public class User {
         this.city = city;
         this.email = email;
         this.description = description;
+    }
+
+    public User() {
     }
 
 
@@ -30,7 +42,7 @@ public class User {
         return name;
     }
 
-    public LocalDate getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 

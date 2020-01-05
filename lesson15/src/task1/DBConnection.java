@@ -13,7 +13,7 @@ public class DBConnection {
         Connection connection = null;
 
         try {
-            Class.forName("task1.org.postgresql.Driver");
+            Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, bd, password);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

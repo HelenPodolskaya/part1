@@ -1,12 +1,20 @@
 package task1;
 
 public class Role {
-    public Integer id;
-    public RolesEnum name;
-    public String description;
+    private Integer id;
+    private RolesEnum name;
+    private String description;
+
+    public Role() {
+    }
 
     public Role(Integer id, RolesEnum name, String description) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Role(RolesEnum name, String description) {
         this.name = name;
         this.description = description;
     }
