@@ -6,6 +6,10 @@ public class User {
     private Integer id;
     private String name;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public User(String name, Date birthday, String city, String email, String description) {
         this.name = name;
         this.birthday = birthday;

@@ -14,6 +14,10 @@ public class Role {
         this.description = description;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Role(RolesEnum name, String description) {
         this.name = name;
         this.description = description;
