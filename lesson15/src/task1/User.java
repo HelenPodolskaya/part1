@@ -37,6 +37,29 @@ public class User {
     public User() {
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setLogin_id(Integer login_id) {
+        this.login_id = login_id;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Integer getId() {
         return id;
