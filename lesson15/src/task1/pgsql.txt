@@ -1,0 +1,31 @@
+CREATE TABLE USER_TABLE(
+    id bigserial primary key ,
+    name varchar(50) NOT NULL ,
+    birthday date NOT NULL ,
+    login_ID integer,
+    city varchar(50),
+    email varchar(50) NOT NULL,
+    description varchar(255))
+CREATE TYPE ROLES_ENUM AS ENUM (
+    'Administration', 'Clients', 'Billing'
+    );
+CREATE TABLE ROLE_TABLE
+(
+    id          bigserial primary key,
+    name        roles_enum,
+    description text
+);
+
+CREATE TABLE USER_ROLE_TABLE
+(
+    id      bigserial primary key,
+    user_id bigserial NOT NULL,
+    rode_id bigserial NOT NULL
+);
+ALTER TABLE ONLY USER_ROLE_TABLE
+    ADD CONSTRAINT "USER_ROLE_fk_users"
+        FOREIGN KEY (user_id) REFERENCES user_table(id);
+
+ALTER TABLE ONLY USER_ROLE_TABLE
+    ADD CONSTRAINT "USER_ROLE_fk_roles"
+        FOREIGN KEY (rode_id) REFERENCES ROLE_TABLE(id);

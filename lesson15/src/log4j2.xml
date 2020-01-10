@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <File name="file" fileName="logs/log4j/log.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+        </File>
+        <File name="file2" fileName="logs/log4j/log2.log">
+            <MarkerFilter marker="consoleonly" onMatch="DENY" onMismatch="ACCEPT"/>
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+        </File>
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+        <JDBC name="db" tablename="public.app_logs">
+            <DriverManager connectionString="jdbc:postgresql://localhost:5433/test_database"
+                           driverClassName="org.postgresql.Driver" username="postgres" password="helen"/>
+            <Column name="id" pattern="%u" isUnicode="false"/>
+            <Column name="date" isEventTimestamp="true" isUnicode="false"/>
+            <Column name="log_level" pattern="%level" isUnicode="false"/>
+            <Column name="message" pattern="%m" isUnicode="false"/>
+            <Column name="exception" pattern="%throwable" isUnicode="false"/>
+        </JDBC>
+    </Appenders>
+    <Loggers>
+        <Root level="trace">
+            <AppenderRef ref="file" level="DEBUG"/>
+            <AppenderRef ref="stdout" level="INFO"/>
+        </Root>
+        <Logger name="task1.Main" level="info" additivity="false">
+            <AppenderRef ref="file2" level="INFO"/>
+            <AppenderRef ref="stdout" level="INFO"/>
+            <AppenderRef ref="db" level="INFO"/>
+        </Logger>
+    </Loggers>
+</Configuration>
